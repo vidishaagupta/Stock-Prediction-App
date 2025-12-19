@@ -3,11 +3,9 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import os
 
-# =====================================================
-# PAGE CONFIG
-# =====================================================
+
 st.set_page_config(
-    page_title="Stock Price Prediction Dashboard",
+    page_title="Stock Price Prediction App",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -15,9 +13,7 @@ st.set_page_config(
 plt.style.use("dark_background")
 DATA_DIR = "streamlit_data"
 
-# =====================================================
-# LOAD DATA
-# =====================================================
+
 best_model_df = pd.read_csv(f"{DATA_DIR}/best_models.csv")
 next_day_df = pd.read_csv(f"{DATA_DIR}/next_day_predictions.csv")
 performance_df = pd.read_csv(f"{DATA_DIR}/performance_comparison.csv")
@@ -28,9 +24,7 @@ stock_list = sorted(
     [f.replace("_data.csv", "") for f in os.listdir(DATA_DIR) if f.endswith("_data.csv")]
 )
 
-# =====================================================
-# DARK UI CSS
-# =====================================================
+
 st.markdown("""
 <style>
 body { background-color: #0e1117; color: #e6edf3; }
@@ -62,16 +56,12 @@ body { background-color: #0e1117; color: #e6edf3; }
 </style>
 """, unsafe_allow_html=True)
 
-# =====================================================
-# HEADER
-# =====================================================
+#Header
 st.markdown("## 📈 **Stock Price Prediction Dashboard**")
 st.markdown("**Multi-Model ML Forecasting  |  NIFTY-50 Stocks**")
 st.markdown("---")
 
-# =====================================================
 # SIDEBAR
-# =====================================================
 st.sidebar.markdown("### 📊 ML Stock Prediction App")
 
 selected_stock = st.sidebar.selectbox("Select Stock", stock_list)
@@ -90,9 +80,7 @@ show_rf = st.sidebar.checkbox("RandomForest", value=True)
 show_gb = st.sidebar.checkbox("GradientBoosting", value=True)
 show_xgb = st.sidebar.checkbox("XGBoost", value=True)
 
-# =====================================================
-# LOAD STOCK DATA
-# =====================================================
+
 df = pd.read_csv(f"{DATA_DIR}/{selected_stock}_data.csv")
 df["Date"] = pd.to_datetime(df["Date"])
 
@@ -109,9 +97,7 @@ next_day_price = next_day_df.loc[
 price_30d = forecast_30d.loc[selected_stock].iloc[-1]
 price_1y = forecast_1y.loc[selected_stock].iloc[-1]
 
-# =====================================================
 # METRIC CARDS
-# =====================================================
 c1, c2, c3 = st.columns(3)
 
 with c1:
@@ -140,9 +126,7 @@ with c3:
 
 st.markdown("---")
 
-# =====================================================
 # MAIN GRAPH
-# =====================================================
 if view_mode == "By Year (2020 → Now)":
 
     st.markdown("### 📊 Multi-Year Stock Price Trend")
@@ -200,7 +184,7 @@ if view_mode == "By Year (2020 → Now)":
             alpha=0.85
         )
 
-    # XGBOOST (marker only – correct representation)
+    # XGBOOST 
     if show_xgb:
         ax.scatter(
             df["Date"].iloc[-1],
@@ -231,9 +215,8 @@ if view_mode == "By Year (2020 → Now)":
     st.pyplot(fig)
     plt.close()
 
-# =====================================================
 # NEXT DAYS FORECAST
-# =====================================================
+
 else:
     st.markdown("### 🔮 Next Days Forecast")
 
@@ -284,9 +267,7 @@ else:
     st.pyplot(fig)
     plt.close()
 
-# =====================================================
 # FORECAST CARDS
-# =====================================================
 f1, f2, f3 = st.columns(3)
 
 with f1:
@@ -300,20 +281,16 @@ with f3:
 
 st.markdown("---")
 
-# =====================================================
-# MODEL COMPARISON TABLE
-# =====================================================
+#TABLE
 st.markdown("### 📋 Detailed Model Comparison")
 
 stock_perf = performance_df[performance_df["Stock"] == selected_stock]
 st.dataframe(stock_perf, use_container_width=True, hide_index=True)
 
-# =====================================================
 # FOOTER
-# =====================================================
 st.markdown("""
 <div class="footer">
-🚀 Predicting NIFTY-50 Stock Prices — Resume-Ready ML Project
+🚀 Predicting NIFTY-50 Stock Prices
 </div>
 """, unsafe_allow_html=True)
 
